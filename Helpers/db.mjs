@@ -22,6 +22,7 @@ const createDB = () => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT Unique,
         email TEXT Unique,
+        password TEXT,
         is_admin INTEGER
       )`
     )
