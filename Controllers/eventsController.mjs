@@ -1,21 +1,10 @@
 
 import event from "../models/event.mjs"
 
-function hello(req, res) {
-
-    // cout
-    console.log("hello")
-
-    // return
-    res.status(201).json({ message : "Product is added" })
-}
-
-
 const postTest = (req, res) => {
     console.log(req.body)
     res.status(201).json({ message : "post was called" })
 }
-
 
 const deleteTest = (req, res) => {
     console.log(req.body)
@@ -29,12 +18,9 @@ const updateTest = (req, res) => {
     res.status(201).json({ message : "update was called" })
 }
 
-
 const addEvent = (req, res) => {
-
     const body = req.body
-
-
+    console.log(body)
     // Logic to add event
     const title = body.title
     const icon = body.icon
@@ -47,15 +33,32 @@ const addEvent = (req, res) => {
 
     event.addEvent(title, icon, description, price, capacity, date, location, org_id)
 
-
     res.status(201).json({ message : "Event added" })
 }
 
-const getEvents = (req, res) => {
-    const events = event.getAllEvents()
-    res.status(200).json(events)
+const deleteEventById = (req, res) => {
+    const id = parseInt(req.params.id)
+    event.deleteEventById(id)
+    res.status(200).json({ message: "Event deleted" })
 }
 
+const getEventById = (req, res) => {
+    const id = parseInt(req.params.id)
+    const event = event.getEventById(id)
+    if (event) {
+        res.status(200).json(event)
+    } else {
+        res.status(404).json({ message: "Event not found" })
+    }
+}
 
+const getAllEvents = (req, res) => {
+    const events = event.getAllEvents()
+    if (events) {
+        res.status(200).json(events)
+    } else {
+        res.status(404).json({ message: "No events found" })
+    }
+}
 
-export default { hello, postTest , deleteTest , updateTest , addEvent, getEvents }
+export default { postTest , deleteTest , updateTest , addEvent, getEventById, getAllEvents, deleteEventById }

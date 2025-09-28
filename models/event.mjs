@@ -6,6 +6,12 @@ const addEvent = (title, icon, description, price, capacity, date, location, org
     events.push({ id: events.length + 1, title, icon, description, price, capacity, date, location, org_id });
 }
 
+const deleteEventById = (id) => {
+    const index = events.findIndex(event => event.id === id);
+    if (index !== -1) {
+        events.splice(index, 1);
+    }
+}
 
 const getEventById = (id) => {
     return events.find(event => event.id === id);
@@ -15,4 +21,5 @@ const getEventById = (id) => {
 const getAllEvents = () => {
     return events;
 }
-export default { addEvent, getEventById, getAllEvents };
+
+export default { addEvent, getEventById, getAllEvents, deleteEventById };
