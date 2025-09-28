@@ -1,16 +1,18 @@
 import e, { Router } from "express"
-import testController from "../Controllers/testController.mjs"
+import eventsController from "../Controllers/eventsController.mjs"  // Import the eventsController
 
 const router = Router()
 
-router.get("/", testController.hello)
-router.post("/post", testController.postTest)
-// router.post("/", testController.create)
-router.put("/:id", testController.updateTest)
-router.delete("/delete", testController.deleteTest)
+//router.get("/", eventsController.hello)
+//router.post("/post", eventsController.postTest)
+// router.post("/", eventsController.create)
+//router.put("/:id", eventsController.updateTest)
+//router.delete("/delete", eventsController.deleteTest)
 
 
-router.get("/events", testController.getEvents)
-router.post("/events", testController.addEvent)
+router.get("/events", eventsController.getAllEvents)
+router.get("/events/:id", eventsController.getEventById)
+router.delete("/events/:id", eventsController.deleteEventById)  
+router.post("/events", eventsController.addEvent)
 
-export default router
+export default router   

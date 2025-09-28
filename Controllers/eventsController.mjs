@@ -1,6 +1,7 @@
 
 import event from "../models/event.mjs"
 
+/*
 const postTest = (req, res) => {
     console.log(req.body)
     res.status(201).json({ message : "post was called" })
@@ -13,10 +14,9 @@ const deleteTest = (req, res) => {
 
 const updateTest = (req, res) => {
     const id = req.params.id
-
-
     res.status(201).json({ message : "update was called" })
 }
+*/
 
 const addEvent = (req, res) => {
     const body = req.body
@@ -61,4 +61,4 @@ const getAllEvents = (req, res) => {
     }
 }
 
-export default { postTest , deleteTest , updateTest , addEvent, getEventById, getAllEvents, deleteEventById }
+export default { addEvent, getEventById, getAllEvents, deleteEventById }
