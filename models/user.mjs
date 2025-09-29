@@ -1,17 +1,77 @@
+import db from "../Helpers/db.mjs"
+import bcrypt from "bcrypt";
 
 
-const getUserById = (id) => {
-    // Dummy function to simulate fetching a user by ID
-    return { id, name: "John Doe", email: "k6NlQ@example.com" };
+const createUser = (name, email, password, isAdmin = false) => {
+
+    const database = db.getDB()
+
+    // Hashing the password
+    bcrypt.hash(password, 10, (err, hash) => {
+        if (err) throw err;
+        
+        database.run(
+            `INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, ?)`,
+            [name, email, hash, isAdmin],
+            function (err) {
+                if (err) {
+                    console.error("Error inserting user:", err.message);
+                } else {
+                    console.log("User created with ID:", this.lastID);
+                }
+            }
+        );
+    });
 }
 
-const getAllUsers = () => {
-    // Dummy function to simulate fetching all users
-    return [
-        { id: 1, name: "John Doe", email: " k6NlQ@example.com" },
-        { id: 2, name: "Jane Smith", email: "qP5yV@example.com" },
-        { id: 3, name: "Alice Johnson", email: " 0M2QW@example.com" },
-    ];
+
+const getUser = (id) => {
+  const database = db.getDB();
+
+  return new Promise((resolve, reject) => {
+    database.get(
+      `SELECT id, name, email, is_admin FROM users WHERE id = ?`,
+      [id],
+      (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row || null); // row if found, null if not
+        }
+      }
+    );
+  });
+};
+
+
+
+
+const checkUserPassword = (email, password) => {
+
+    const database = db.getDB()
+
+    return new Promise((resolve, reject) => {
+        database.get(
+            `SELECT * FROM users WHERE email = ?`,
+            [email],
+            (err, user) => {
+                if (err) return reject(err);
+                if (!user) return reject("Email or Password is wrong");
+
+                // Compare hashed password
+                bcrypt.compare(password, user.password, (err, match) => {
+                    if (err) return reject(err);
+                    if (!match) return reject("Email or Password is wrong"); // wrong password
+
+                    // Remove password before returning
+                    delete user.password;
+                    resolve(user);
+                });
+            }
+        );
+    })
+
 }
 
-export default { getUserById, getAllUsers };
+
+export default { createUser, getUser, checkUserPassword}
