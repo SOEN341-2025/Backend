@@ -18,7 +18,9 @@ const app = express()
 
 app.use(bodyparser.json())
 
-user.createUser("amir", "amir@amir", "1234")
+
+user.checkUserPassword("amir@amir", "1234").then(res => console.log(res)).catch(err => console.log(err));
+
 
 app.listen(express_port,'0.0.0.0', () => {
   console.log(`Web API listening on port ${express_port}`)

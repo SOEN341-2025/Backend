@@ -26,16 +26,52 @@ const createUser = (name, email, password, isAdmin = false) => {
 
 
 const getUser = (id) => {
+  const database = db.getDB();
 
-}
+  return new Promise((resolve, reject) => {
+    database.get(
+      `SELECT id, name, email, is_admin FROM users WHERE id = ?`,
+      [id],
+      (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row || null); // row if found, null if not
+        }
+      }
+    );
+  });
+};
+
+
+
 
 const checkUserPassword = (email, password) => {
 
+    const database = db.getDB()
+
+    return new Promise((resolve, reject) => {
+        database.get(
+            `SELECT * FROM users WHERE email = ?`,
+            [email],
+            (err, user) => {
+                if (err) return reject(err);
+                if (!user) return reject("Email or Password is wrong");
+
+                // Compare hashed password
+                bcrypt.compare(password, user.password, (err, match) => {
+                    if (err) return reject(err);
+                    if (!match) return reject("Email or Password is wrong"); // wrong password
+
+                    // Remove password before returning
+                    delete user.password;
+                    resolve(user);
+                });
+            }
+        );
+    })
+
 }
 
-const editUser = (id, name, email, password) => {
 
-}
-
-
-export default { createUser, getUser}
+export default { createUser, getUser, checkUserPassword}
