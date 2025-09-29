@@ -1,7 +1,7 @@
 import express from "express"
 import bodyparser from "body-parser"
 import db from "./Helpers/db.mjs"
-
+import user from "./models/user.mjs"
 
 // Globals
 ////////////////////////////////////////////////////////////////////////////
@@ -17,6 +17,8 @@ db.createDB()
 const app = express()
 
 app.use(bodyparser.json())
+
+user.createUser("amir", "amir@amir", "1234")
 
 app.listen(express_port,'0.0.0.0', () => {
   console.log(`Web API listening on port ${express_port}`)
