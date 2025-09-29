@@ -80,6 +80,18 @@ const createDB = () => {
         FOREIGN KEY (event_id) REFERENCES events(id)
       )`
     )   
+
+    // fill roles table if database is being created for first time
+    db.get(`SELECT COUNT(*) AS count FROM roles`, (err, row) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+
+    if (row.count === 0) {
+      
+    } 
+  });
 }
 
 
