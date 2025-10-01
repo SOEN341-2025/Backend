@@ -25,8 +25,8 @@ const roles = await Role.getAllRoles()
 if(roles.length == 0) {
   const roles = ["owner", "staff"]
 
-  roles.forEach(r => {
-    Role.addRole(r)
+  roles.forEach( async (r) => {
+    await Role.addRole(r)
   })
 }
 
