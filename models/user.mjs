@@ -4,26 +4,42 @@ import bcrypt from "bcrypt";
 
 const createUser = (name, email, password, isAdmin = false) => {
 
-    const database = db.getDB()
+  const database = db.getDB()
+
+  return new Promise((resolve, reject) => {
 
     // Hashing the password
     bcrypt.hash(password, 10, (err, hash) => {
-        if (err) throw err;
-        
-        database.run(
-            `INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, ?)`,
-            [name, email, hash, isAdmin],
-            function (err) {
-                if (err) {
-                    console.error("Error inserting user:", err.message);
-                } else {
-                    console.log("User created with ID:", this.lastID);
-                }
-            }
+      if (err) return reject(err)
+      
+      database.run(
+          `INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, ?)`,
+          [name, email, hash, isAdmin],
+
+          function (err) {
+            if (err) return reject(err)            
+            resolve(this.lastID)
+          }
+
         );
     });
+  })
 }
 
+const getAllUsers = () => {
+
+  const database = db.getDB()
+
+  return new Promise((resolve, reject) => {
+
+    database.all(`SELECT id, name, email, is_admin FROM users`, [], (err, rows) => {
+      if (err) return reject(err);
+      resolve(rows);
+    });
+
+  })
+
+}
 
 const getUser = (id) => {
   const database = db.getDB();
@@ -42,8 +58,6 @@ const getUser = (id) => {
     );
   });
 };
-
-
 
 
 const checkUserPassword = (email, password) => {
@@ -74,4 +88,4 @@ const checkUserPassword = (email, password) => {
 }
 
 
-export default { createUser, getUser, checkUserPassword}
+export default { createUser, getUser, checkUserPassword, getAllUsers}

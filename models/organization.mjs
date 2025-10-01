@@ -35,10 +35,12 @@ const createOrganization = async (name, icon, description, owner_id) => {
     
 }
 
+// TODO
 const getOrganizationEvents = (id) => {
 
 }
 
+// TODO
 const addUserToOrganization = (id, user_id) => {
 
 }
