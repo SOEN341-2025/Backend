@@ -44,9 +44,9 @@ const deleteEventById = (req, res) => {
 
 const getEventById = (req, res) => {
     const id = parseInt(req.params.id)
-    const event = event.getEventById(id)
-    if (event) {
-        res.status(200).json(event)
+    const foundEvent = event.getEventById(id)
+    if (foundEvent) {
+        res.status(200).json(foundEvent)
     } else {
         res.status(404).json({ message: "Event not found" })
     }
