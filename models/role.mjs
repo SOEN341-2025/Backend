@@ -15,6 +15,9 @@ const getAllRoles = () => {
 
 }
 
+const getRole = (id) => {
+
+}
 
 const addRole = (name) => {
 
@@ -31,4 +34,4 @@ const addRole = (name) => {
     })
 }
 
-export default {getAllRoles, addRole}
+export default {getAllRoles, addRole, getRole}

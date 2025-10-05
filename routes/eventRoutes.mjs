@@ -8,4 +8,4 @@ router.get("/events/:id", eventsController.getEventById)
 router.delete("/events/:id", eventsController.deleteEventById)  
 router.post("/events", eventsController.addEvent)
 
-export default router   
+export default router

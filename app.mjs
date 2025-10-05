@@ -4,7 +4,7 @@ import db from "./Helpers/db.mjs"
 import User from "./models/user.mjs"
 import Role from "./models/role.mjs"
 import testRoutes from "./routes/eventRoutes.mjs"
-import role from "./models/role.mjs"
+import userRoutes from "./routes/userRoutes.mjs"
 
 // Globals
 ////////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ const app = express()
 
 app.use(bodyparser.json())
 app.use("/api/test", testRoutes)
-
+app.use("/api/user", userRoutes)
 
 app.listen(express_port,'0.0.0.0', () => {
   console.log(`Web API listening on port ${express_port}`)
