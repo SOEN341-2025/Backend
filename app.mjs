@@ -3,7 +3,7 @@ import bodyparser from "body-parser"
 import db from "./Helpers/db.mjs"
 import User from "./models/user.mjs"
 import Role from "./models/role.mjs"
-import testRoutes from "./routes/eventRoutes.mjs"
+import cors from "cors"
 import userRoutes from "./routes/userRoutes.mjs"
 
 // Globals
@@ -34,9 +34,11 @@ if(roles.length == 0) {
 ////////////////////////////////////////////////////////////////////////////
 const app = express()
 
+
+app.use(cors())
 app.use(bodyparser.json())
-app.use("/api/test", testRoutes)
 app.use("/api/user", userRoutes)
+
 
 app.listen(express_port,'0.0.0.0', () => {
   console.log(`Web API listening on port ${express_port}`)

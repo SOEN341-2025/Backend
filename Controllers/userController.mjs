@@ -4,6 +4,7 @@ import User from '../models/user.mjs'
 
 const login = async (req, res) => {
 
+    console.log("meow")
     const { email, password } = req.body;
 
     try{
