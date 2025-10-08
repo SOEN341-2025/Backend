@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 
+// TODO Change before deployment
 // Simple secret key for development (in production, use environment variables)
 const JWT_SECRET = 'your-simple-secret-key-2025';
 
