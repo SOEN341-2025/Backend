@@ -12,7 +12,6 @@ const login = async (req, res) => {
 
         // Generate JWT token
         const token = generateToken(user);
-        const tokenInfo = getTokenInfo();
 
         res.status(200).json({ 
             id: user.id,
@@ -25,4 +24,19 @@ const login = async (req, res) => {
     }
 }
 
-export default { login }
+// Todo
+const logout = (req, res) => {
+
+}
+
+// Todo
+const signUp = (req, res) => {
+
+}
+
+// Todo
+const buyTicket = (req, res) => {
+
+}
+
+export default { login, signUp, logout, buyTicket }

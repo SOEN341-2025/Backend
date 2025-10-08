@@ -53,8 +53,22 @@ const getOrganization = (id) => {
     })
 }
 
-// TODO
-const getOrganizationEvents = (id) => {
+const getOrganizationEvents = async (id) => {
+
+    const org = await getOrganization(id)
+    if (!org) throw Error(`Organization ${id} not found`)
+
+    const database = db.getDB()
+
+    return await new Promise( (resolve, reject) => {
+
+        database.all(`SELECT * FROM events WHERE org_id=? `, [id], (err, rows) => {
+            if (err) return reject(err);
+            resolve(rows);
+        });
+
+    })
+
 
 }
 
