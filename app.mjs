@@ -5,6 +5,7 @@ import User from "./models/user.mjs"
 import Role from "./models/role.mjs"
 import cors from "cors"
 import userRoutes from "./routes/userRoutes.mjs"
+import protectedRoutes from "./routes/protectedRoutes.mjs"
 
 // Globals
 ////////////////////////////////////////////////////////////////////////////
@@ -38,6 +39,7 @@ const app = express()
 app.use(cors())
 app.use(bodyparser.json())
 app.use("/api/user", userRoutes)
+app.use("/api", protectedRoutes)
 
 
 app.listen(express_port,'0.0.0.0', () => {

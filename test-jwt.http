@@ -1,0 +1,59 @@
+### JWT Authentication Testing
+### Make sure your backend is running on http://localhost:3000
+
+### 1. Test Login (Generate JWT Token)
+POST http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Expected Response:
+### {
+###   "message": "Login successful",
+###   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+###   "tokenInfo": {
+###     "message": "JWT token generated successfully",
+###     "details": {
+###       "algorithm": "HS256 (HMAC SHA256)",
+###       "expiry": "1 hour",
+###       "usage": "Include this token in the Authorization header as 'Bearer <token>' for authenticated requests"
+###     }
+###   },
+###   "user": {
+###     "id": 123,
+###     "email": "test@example.com"
+###   }
+### }
+
+###
+
+### 2. Test Protected Route (Use JWT Token)
+### Replace <YOUR_JWT_TOKEN> with the actual token from login response
+GET http://localhost:3000/api/profile
+Authorization: Bearer <YOUR_JWT_TOKEN>
+
+###
+
+### 3. Test Invalid Token
+GET http://localhost:3000/api/profile
+Authorization: Bearer invalid.token.here
+
+### Expected Response:
+### {
+###   "error": "Invalid token",
+###   "message": "Invalid or expired token"
+### }
+
+###
+
+### 4. Test No Token
+GET http://localhost:3000/api/profile
+
+### Expected Response:
+### {
+###   "error": "Access denied. No token provided.",
+###   "message": "Please include a valid JWT token in the Authorization header"
+### }
