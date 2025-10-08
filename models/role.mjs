@@ -17,6 +17,37 @@ const getAllRoles = () => {
 
 const getRole = (id) => {
 
+    const database = db.getDB()
+
+    return new Promise((resolve, reject) => {
+        database.get(
+            `SELECT * FROM roles WHERE id = ?`,
+            [id],
+            (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row || null); // row if found, null if not
+                }
+            }
+        );
+    })
+}
+
+const getOwnerRole = () => {
+    return new Promise((resolve, reject) => {
+        database.get(
+            `SELECT * FROM roles WHERE name = owner`,
+            [],
+            (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row || null); // row if found, null if not
+                }
+            }
+        );
+    })
 }
 
 const addRole = (name) => {
@@ -34,4 +65,4 @@ const addRole = (name) => {
     })
 }
 
-export default {getAllRoles, addRole, getRole}
+export default {getAllRoles, addRole, getRole, getOwnerRole}

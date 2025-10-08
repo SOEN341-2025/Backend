@@ -1,38 +1,56 @@
 import db from "../Helpers/db.mjs"
 import User from "./user.mjs"
+import Role from "./role.mjs"
 
-const createOrganization = async (name, icon, description, owner_id) => {
+// TODO
+const createOrganization = async (name, icon, description, creator_id) => {
+
+    const user = await User.getUser(creator_id)
+    if (!user) throw new Error(`User ${creator_id} not found`);
 
     const database = db.getDB()
-
-    let user;
-    try {
-        user = await User.getUser(owner_id)
-        const lastId = new Promise((resolve, reject) => {
-            database.run(
-                `INSERT INTO organizations (name, icon, description) VALUES (?, ?, ?)`,
-                [name, icon, description],
-                function (err) {
-                    if (err) {
-                        console.error("Error inserting organization:", err.message);
-                        return reject(err);
-                    } else {
-                        console.log("Organization created with ID:", this.lastID);
-                        resolve(this.lastID); // return org id instead of just true
-                    }
+    const org_id = await new Promise((resolve, reject) => {
+        database.run(
+            `INSERT INTO organizations (name, icon, description) VALUES (?, ?, ?)`,
+            [name, icon, description],
+            function (err) {
+                if (err) {
+                    console.error("Error inserting organization:", err.message);
+                    return reject(err);
+                } else {
+                    console.log("Organization created with ID:", this.lastID);
+                    resolve(this.lastID); // return org id instead of just true
                 }
-            );
-        })
+            }
+        );
+    })
 
-        // Todo
-        // Have to add user_role_organization
-    }
-    catch {
-        return false
-    }
+    const ownerRole = await Role.getOwnerRole()
+    const result = await addUserToOrganization(org_id, user.id, ownerRole.id)
 
     return true
     
+}
+
+
+const getOrganization = (id) => {
+
+    const database = db.getDB()
+    return new Promise((resolve, reject) => {
+
+        database.get(
+            `SELECT * FROM organizations WHERE id = ?`,
+            [id],
+            (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row || null); // row if found, null if not
+                }
+            }
+        );        
+
+    })
 }
 
 // TODO
@@ -40,9 +58,34 @@ const getOrganizationEvents = (id) => {
 
 }
 
-// TODO
-const addUserToOrganization = (id, user_id) => {
+const addUserToOrganization = async (organization_id, user_id, role_id) => {
+
+    const user = await User.getUser(user_id)
+    if (!user) throw new Error(`User ${user_id} not found`);
+    
+    const org = await getOrganization(organization_id)
+    if (!org) throw Error(`Organization ${organization_id} not found`)
+
+    const role = await Role.getRole(role_id)
+    if (!role) throw Error(`Role ${role_id} not found`)
+
+    const database = db.getDB()
+    await new Promise((resolve, reject) => {
+
+        database.run(
+            `INSERT INTO organization_roles (user_id, role_id, org_id) VALUES (?, ?, ?)`,
+            [user_id, role_id, organization_id],
+            function (err) {
+                if (err) {
+                    return reject(err);
+                } else {
+                    resolve(this.lastID);
+                }
+            }
+        );
+    })
 
 }
 
-export default {createOrganization, getOrganizationEvents, addUserToOrganization}
+
+export default {createOrganization, getOrganizationEvents, addUserToOrganization, getOrganization}
