@@ -3,8 +3,6 @@ import event from "../models/event.mjs"
 
 const addEvent = (req, res) => {
     const body = req.body
-    console.log(body)
-    // Logic to add event
     const title = body.title
     const icon = body.icon
     const description = body.description

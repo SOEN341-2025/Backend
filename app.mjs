@@ -1,8 +1,9 @@
 import express from "express"
 import bodyparser from "body-parser"
-import db from "./Helpers/db.mjs"
+import db from "./utils/db.mjs"
 import User from "./models/user.mjs"
 import Role from "./models/role.mjs"
+import Organization from "./models/organization.mjs"
 import cors from "cors"
 import userRoutes from "./routes/userRoutes.mjs"
 import protectedRoutes from "./routes/protectedRoutes.mjs"
@@ -18,6 +19,7 @@ await db.createDB()
 
 // Add Admin if there is none in db
 const users = await User.getAllUsers()
+
 if (users.length == 0)  
   await User.createUser("admin", "admin@admin", "1234", true)
 
@@ -31,6 +33,12 @@ if(roles.length == 0) {
   })
 }
 
+
+const orgs = await Organization.getAllOrganizations()
+if(orgs.length == 0) {
+  const ownerId = await User.createUser("owner_test", "owner@owner", "1234", false)
+  await Organization.createOrganization("test", "test.png", "this is a test org", ownerId)
+}
 // express setup
 ////////////////////////////////////////////////////////////////////////////
 const app = express()

@@ -1,7 +1,5 @@
-
-
 import User from '../models/user.mjs'
-import { generateToken, getTokenInfo } from '../utils/jwt.mjs'
+import { generateToken } from '../utils/jwt.mjs'
 
 const login = async (req, res) => {
 
@@ -15,7 +13,9 @@ const login = async (req, res) => {
 
         res.status(200).json({ 
             id: user.id,
+            name: user.name,
             email: user.email,
+            admin: user.is_admin,
             token: token
         });
     }
@@ -29,14 +29,20 @@ const logout = (req, res) => {
 
 }
 
-// Todo
-const signUp = (req, res) => {
-
+const signUp = async (req, res) => {
+    const {name, email, password} = req.body
+    const user = await User.createUser(name, email, password)
+    const token = generateToken(user)
+    res.status(200).json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        admin: user.is_admin,
+        token: token
+    })
 }
 
-// Todo
 const buyTicket = (req, res) => {
-
 }
 
 export default { login, signUp, logout, buyTicket }

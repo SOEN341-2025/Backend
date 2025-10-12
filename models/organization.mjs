@@ -1,8 +1,7 @@
-import db from "../Helpers/db.mjs"
+import db from "../utils/db.mjs"
 import User from "./user.mjs"
 import Role from "./role.mjs"
 
-// TODO
 const createOrganization = async (name, icon, description, creator_id) => {
 
     const user = await User.getUser(creator_id)
@@ -26,18 +25,29 @@ const createOrganization = async (name, icon, description, creator_id) => {
     })
 
     const ownerRole = await Role.getOwnerRole()
-    const result = await addUserToOrganization(org_id, user.id, ownerRole.id)
+    const _ = await addUserToOrganization(org_id, user.id, ownerRole.id)
 
-    return true
+    return org_id
     
 }
 
+const getAllOrganizations = () => {
+
+    const database = db.getDB()
+
+    return new Promise((resolve, reject) => {
+        database.all(`SELECT * FROM organizations`, [], (err, rows) => {
+            if (err) return reject(err);
+            resolve(rows);
+        });
+    })
+
+}
 
 const getOrganization = (id) => {
 
     const database = db.getDB()
     return new Promise((resolve, reject) => {
-
         database.get(
             `SELECT * FROM organizations WHERE id = ?`,
             [id],
@@ -49,7 +59,6 @@ const getOrganization = (id) => {
                 }
             }
         );        
-
     })
 }
 
@@ -99,7 +108,42 @@ const addUserToOrganization = async (organization_id, user_id, role_id) => {
         );
     })
 
+    return true
 }
 
+const getOrganizationUsers = async (orgId) => {
+    const database = db.getDB()
+    const memberRoleId = await new Promise((resolve, reject) => {
+        database.all(
+            `SELECT * FROM organization_roles WHERE org_id=?`,
+            [orgId],
+            function (err) {
+                if(err) {
+                    return reject(err)
+                }
+                resolve(this.lastID)
+            }
+        )
+    })
 
-export default {createOrganization, getOrganizationEvents, addUserToOrganization, getOrganization}
+    if (memberRoleId.length == 0) return []
+
+    const userIds = memberRoleId.map(u => u.user_id)
+    const placeholders = memberRoleId.map(() => '?').join(',')
+
+    const users = await new Promise((resolve, reject) => {
+        database.all(
+            `SELECT * FROM users WHERE id IN (${placeholders})`,
+            userIds,
+            (err, rows) => {
+                if (err) return reject(err)
+                resolve(rows)
+            }
+        )
+    })
+
+    const roles = await Role.getAllRoles()
+
+}
+
+export default {createOrganization, getOrganizationEvents, addUserToOrganization, getOrganization, getAllOrganizations, getOrganizationUsers}

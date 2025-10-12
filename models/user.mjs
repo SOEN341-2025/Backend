@@ -1,4 +1,4 @@
-import db from "../Helpers/db.mjs"
+import db from "../utils/db.mjs"
 import bcrypt from "bcrypt";
 
 
@@ -87,5 +87,25 @@ const checkUserPassword = (email, password) => {
 
 }
 
+const deleteUser = (id) => {
 
-export default { createUser, getUser, checkUserPassword, getAllUsers}
+  const database = db.getDB()
+
+  return new Promise((resolve, reject) => {
+
+    database.run('DELETE FROM users WHERE id = ?', [id], function (err) {
+      if (err) {
+        console.error('Error deleting row:', err.message);
+        reject(err)
+      } else {
+        console.log(`Row(s) deleted: ${this.changes}`);
+        resolve(this.changes)
+      }
+    });
+
+  })  
+
+}
+
+
+export default { createUser, getUser, checkUserPassword, getAllUsers, deleteUser}
