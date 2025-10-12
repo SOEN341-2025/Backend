@@ -27,7 +27,10 @@ const deleteEventById = (id) => {
     
     const database = db.getDB()
     return new Promise((resolve, reject) => {
-
+        database.run(`DELETE FROM events WHERE id = ?`, [id], function (err) {
+            if (err) return reject(err);
+            resolve(this.changes > 0);
+        });
     })
 
 }
@@ -37,7 +40,10 @@ const getEventById = (id) => {
     const database = db.getDB()
 
     return new Promise((resolve, reject) => {
-
+        database.get(`SELECT * FROM events WHERE id = ?`, [id], (err, row) => {
+            if (err) return reject(err);
+            resolve(row || undefined);
+        });
     })
 }
 
