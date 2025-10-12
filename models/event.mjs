@@ -38,6 +38,17 @@ const getEventById = (id) => {
 
     return new Promise((resolve, reject) => {
 
+        database.get(
+            `SELECT * FROM events WHERE id = ?`,
+            [id],
+            (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row || null); // row if found, null if not
+                }
+            }
+        );
     })
 }
 

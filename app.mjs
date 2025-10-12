@@ -22,8 +22,9 @@ await db.createDB()
 // Add Admin if there is none in db
 const users = await User.getAllUsers()
 
-if (users.length == 0)  
+if (users.length == 0)  {
   await User.createUser("admin", "admin@admin", "1234", true)
+}
 
 // add Roles to table if it is empty
 const roles = await Role.getAllRoles()
@@ -42,15 +43,15 @@ if(orgs.length == 0) {
   const ownerId = await User.createUser("owner_test", "owner@owner", "1234", false)
   const orgId = await Organization.createOrganization("test", "test.png", "this is a test org", ownerId)
   await Event.addEvent("Event 1", "icon1.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 2", "icon2.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 3", "icon3.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 4", "icon4.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 5", "icon5.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 6", "icon6.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 7", "icon7.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 8", "icon8.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 9", "icon9.png", "This is event 1", "1", "100", today, "Online", orgId)
-  await Event.addEvent("Event 10", "icon10.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 2", "icon2.png", "This is event 2", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 3", "icon3.png", "This is event 3", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 4", "icon4.png", "This is event 4", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 5", "icon5.png", "This is event 5", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 6", "icon6.png", "This is event 6", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 7", "icon7.png", "This is event 7", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 8", "icon8.png", "This is event 8", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 9", "icon9.png", "This is event 9", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 10", "icon10.png", "This is event 10", "1", "100", today, "Online", orgId)
 }
 // express setup
 ////////////////////////////////////////////////////////////////////////////
