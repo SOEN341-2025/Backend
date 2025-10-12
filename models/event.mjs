@@ -1,5 +1,5 @@
 
-import db from "../Helpers/db.mjs";
+import db from "../utils/db.mjs";
 import Organization from "./organization.mjs";
 
 

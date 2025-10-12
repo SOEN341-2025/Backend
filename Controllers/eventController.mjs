@@ -33,8 +33,8 @@ const getEventById = (req, res) => {
     }
 }
 
-const getAllEvents = (req, res) => {
-    const events = event.getAllEvents()
+const getAllEvents = async (req, res) => {
+    const events = await event.getAllEvents()
     if (events) {
         res.status(200).json(events)
     } else {

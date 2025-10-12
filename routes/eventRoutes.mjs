@@ -4,7 +4,7 @@ import eventsController from "../Controllers/eventController.mjs"
 
 const router = Router()
 
-router.get("/events", eventsController.getAllEvents)
+router.get("/", eventsController.getAllEvents)
 router.get("/events/:id", eventsController.getEventById)
 router.delete("/events/:id", authenticateToken , eventsController.deleteEventById)  
 router.post("/events", authenticateToken , eventsController.addEvent)
