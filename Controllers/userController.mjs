@@ -22,27 +22,29 @@ const login = async (req, res) => {
     catch{
         res.status(400).json({ error: "Invalid username or password" });
     }
+
+    
 }
 
-// Todo
-const logout = (req, res) => {
+// NEW: register controller
+const register = async (req, res) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'name, email and password are required' });
+  }
 
+  try {
+    const userId = await User.createUser(name, email, password, false);
+    return res.status(201).json({ message: 'User created', id: userId });
+  } catch (err) {
+    console.error('Register error:', err);
+    // SQLite unique constraint on email typically surfaces as SQLITE_CONSTRAINT
+    if (err && (err.code === 'SQLITE_CONSTRAINT' || (err.message && err.message.includes('UNIQUE')))) {
+      return res.status(409).json({ error: 'Email already registered' });
+    }
+    return res.status(500).json({ error: 'Server error' });
+  }
 }
 
-const signUp = async (req, res) => {
-    const {name, email, password} = req.body
-    const user = await User.createUser(name, email, password)
-    const token = generateToken(user)
-    res.status(200).json({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        admin: user.is_admin,
-        token: token
-    })
-}
 
-const buyTicket = (req, res) => {
-}
-
-export default { login, signUp, logout, buyTicket }
+export default { login, register }
