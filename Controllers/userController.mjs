@@ -1,7 +1,5 @@
-
-
 import User from '../models/user.mjs'
-import { generateToken, getTokenInfo } from '../utils/jwt.mjs'
+import { generateToken } from '../utils/jwt.mjs'
 
 const login = async (req, res) => {
 
@@ -12,11 +10,12 @@ const login = async (req, res) => {
 
         // Generate JWT token
         const token = generateToken(user);
-        const tokenInfo = getTokenInfo();
 
         res.status(200).json({ 
             id: user.id,
+            name: user.name,
             email: user.email,
+            admin: user.is_admin,
             token: token
         });
     }
@@ -46,5 +45,6 @@ const register = async (req, res) => {
     return res.status(500).json({ error: 'Server error' });
   }
 }
+
 
 export default { login, register }

@@ -1,5 +1,5 @@
 
-import db from "../Helpers/db.mjs"
+import db from "../utils/db.mjs"
 
 
 const getAllRoles = () => {
@@ -35,10 +35,13 @@ const getRole = (id) => {
 }
 
 const getOwnerRole = () => {
+
+    const database = db.getDB()
+
     return new Promise((resolve, reject) => {
         database.get(
-            `SELECT * FROM roles WHERE name = owner`,
-            [],
+            `SELECT * FROM roles WHERE name = ?`,
+            ["owner"],
             (err, row) => {
                 if (err) {
                     reject(err);
