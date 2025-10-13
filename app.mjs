@@ -2,10 +2,12 @@ import express from "express"
 import bodyparser from "body-parser"
 import db from "./utils/db.mjs"
 import User from "./models/user.mjs"
+import Event from "./models/event.mjs"
 import Role from "./models/role.mjs"
 import Organization from "./models/organization.mjs"
 import cors from "cors"
 import userRoutes from "./routes/userRoutes.mjs"
+import eventRoutes from "./routes/eventRoutes.mjs"
 import protectedRoutes from "./routes/protectedRoutes.mjs"
 
 // Globals
@@ -36,8 +38,19 @@ if(roles.length == 0) {
 
 const orgs = await Organization.getAllOrganizations()
 if(orgs.length == 0) {
+  const today = new Date().toISOString().split('T')[0];
   const ownerId = await User.createUser("owner_test", "owner@owner", "1234", false)
-  await Organization.createOrganization("test", "test.png", "this is a test org", ownerId)
+  const orgId = await Organization.createOrganization("test", "test.png", "this is a test org", ownerId)
+  await Event.addEvent("Event 1", "icon1.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 2", "icon2.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 3", "icon3.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 4", "icon4.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 5", "icon5.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 6", "icon6.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 7", "icon7.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 8", "icon8.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 9", "icon9.png", "This is event 1", "1", "100", today, "Online", orgId)
+  await Event.addEvent("Event 10", "icon10.png", "This is event 1", "1", "100", today, "Online", orgId)
 }
 // express setup
 ////////////////////////////////////////////////////////////////////////////
@@ -47,7 +60,8 @@ const app = express()
 app.use(cors())
 app.use(bodyparser.json())
 app.use("/api/user", userRoutes)
-app.use("/api", protectedRoutes)
+app.use("/api/event", eventRoutes)
+app.use("/api", protectedRoutes) // Todo 
 
 
 app.listen(express_port,'0.0.0.0', () => {

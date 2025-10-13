@@ -144,6 +144,8 @@ const getOrganizationUsers = async (orgId) => {
 
     const roles = await Role.getAllRoles()
 
+    return user.map(users)
+
 }
 
 export default {createOrganization, getOrganizationEvents, addUserToOrganization, getOrganization, getAllOrganizations, getOrganizationUsers}
