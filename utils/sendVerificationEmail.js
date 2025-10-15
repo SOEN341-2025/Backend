@@ -1,28 +1,23 @@
-const nodemailer = require('nodemailer');
+// sendVerificationEmail.js
+import mailService from './mailService.js'; // adjust path based on your structure
 
-const sendVerificationEmail = async (email, link) => {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
+export const sendVerificationEmail = (userEmail, verificationLink) => {
+    const subject = 'Verify your Email Address';
+    const html = `
+    <div style="font-family: Arial, sans-serif;">
+      <h2>Welcome to our platform!</h2>
+      <p>To complete your registration, please click the link below to verify your email address:</p>
+      <a href="${verificationLink}" style="display:inline-block; padding:10px 15px; background-color:#4CAF50; color:white; text-decoration:none; border-radius:5px;">
+        Verify Email
+      </a>
+      <p>If the button above doesn't work, copy and paste this URL into your browser:</p>
+      <p>${verificationLink}</p>
+    </div>
+  `;
+
+    mailService.send({
+        to: userEmail,
+        subject,
+        html,
     });
-
-    const message = {
-        from: `"Your App" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'Email Verification',
-        html: `
-      <h3>Welcome!</h3>
-      <p>Please verify your email by clicking the link below:</p>
-      <a href="${link}">Verify My Email</a>
-      <p>This link expires in 1 hour.</p>
-    `,
-    };
-
-    await transporter.sendMail(message);
 };
-
-module.exports = sendVerificationEmail;
-
