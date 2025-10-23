@@ -1,7 +1,6 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
   "main": "main.mjs",
   "scripts": {
     "test": "node --test",
@@ -12,9 +11,25 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "node-fetch": "^3.3.2",
+    "nodemailer": "^7.0.9",
     "sqlite3": "^5.1.7"
-  }
+  },
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SOEN341-2025/Backend.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/SOEN341-2025/Backend/issues"
+  },
+  "homepage": "https://github.com/SOEN341-2025/Backend#readme",
+  "description": ""
 }
