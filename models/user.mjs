@@ -1,4 +1,5 @@
 import db from "../utils/db.mjs"
+import Event from "./event.mjs"
 import bcrypt from "bcrypt";
 
 
@@ -13,15 +14,15 @@ const createUser = (name, email, password, isAdmin = false) => {
       if (err) return reject(err)
       
       database.run(
-          `INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, ?)`,
-          [name, email, hash, isAdmin],
+        `INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, ?)`,
+        [name, email, hash, isAdmin],
 
-          function (err) {
-            if (err) return reject(err)            
-            resolve(this.lastID)
-          }
+        function (err) {
+          if (err) return reject(err)            
+          resolve(this.lastID)
+        }
 
-        );
+      );
     });
   })
 }
@@ -108,4 +109,64 @@ const deleteUser = (id) => {
 }
 
 
-export default { createUser, getUser, checkUserPassword, getAllUsers, deleteUser}
+const addTicket = async (user_id, event_id) => {
+
+  const database = db.getDB()
+
+  const user = await getUser(user_id)
+  if(!user) throw new Error(`User ${user_id} not found`);
+
+  const event = await Event.getEventById(event_id)
+  if(!event) throw new Error(`Event ${event_id} not found`)
+
+  return await new Promise((resolve, reject) => {
+
+    database.run(
+      `INSERT INTO tickets (user_id, event_id, status) VALUES (?, ?, ?)`,
+      [user_id, event_id, 1],
+
+      function (err) {
+        if (err) return reject(err)            
+          resolve(this.lastID)
+        }
+
+    );
+
+  })
+}
+
+
+const getUserTickets = async (id) => {
+  const database = db.getDB();
+
+  const rows = await new Promise((resolve, reject) => {
+    database.all(
+      `SELECT event_id FROM tickets WHERE user_id = ?`,
+      [id],
+      (err, rows) => {
+        if (err) return reject(err);
+        if (!rows || rows.length === 0) return resolve([]); // no tickets
+        resolve(rows);
+      }
+    );
+  });
+
+  const eventIds = rows.map(r => r.event_id);
+  if (eventIds.length === 0) return [];
+
+  const placeholders = eventIds.map(() => '?').join(',');
+
+  return await new Promise((resolve, reject) => {
+    database.all(
+      `SELECT * FROM events WHERE id IN (${placeholders})`,
+      eventIds,
+      (err, events) => {
+        if (err) return reject(err);
+        resolve(events);
+      }
+    );
+  });
+};
+
+
+export default { createUser, getUser, checkUserPassword, getAllUsers, deleteUser, getUserTickets, addTicket}
