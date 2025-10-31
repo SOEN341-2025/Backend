@@ -3,6 +3,7 @@ import assert from 'node:assert';
 import organizationModule from '../models/organization.mjs';
 import userModule from '../models/user.mjs';
 import roleModule from '../models/role.mjs';
+import db from '../utils/db.mjs';
 
 const {
     createOrganization,
@@ -18,6 +19,17 @@ describe('Organization Management Tests', async () => {
     let testUser;
     let ownerRole;
     const setupTimestamp = Date.now();
+
+    // initialize in-memory database for deterministic tests
+    db.init(':memory:');
+    await db.createDB();
+
+    // ensure required role is present
+    try {
+        await roleModule.addRole('owner');
+    } catch (e) {
+        // ignore if already exists
+    }
 
     // create a single test user and get owner role (will be reused)
     testUser = await userModule.createUser(
