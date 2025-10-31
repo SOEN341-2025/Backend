@@ -2,6 +2,8 @@ import { describe, beforeEach, afterEach, it } from 'node:test'
 import assert from 'node:assert'
 import User from '../models/user.mjs'
 import Event from '../models/event.mjs'
+import Organization from '../models/organization.mjs'
+import Role from '../models/role.mjs'
 import db from '../utils/db.mjs'
 import bcrypt from 'bcrypt'
 
@@ -9,6 +11,7 @@ describe('User Model Tests', async () => {
   let testUser1Id;
   let testUser2Id;
   let testEventId;
+  let testOrgId;
   const timestamp = Date.now();
 
   // Test data with timestamps to ensure uniqueness
@@ -38,6 +41,9 @@ describe('User Model Tests', async () => {
     db.init(':memory:');
     await db.createDB();
     
+    // Create owner role (required by createOrganization)
+    await Role.addRole('owner');
+
     // Create test users
     testUser1Id = await User.createUser(
       testUser1.name,
@@ -52,8 +58,15 @@ describe('User Model Tests', async () => {
       testUser2.password,
       testUser2.isAdmin
     );
+    // Create a test organization and event linked to that org
+    testOrgId = await Organization.createOrganization(
+      `User Test Org ${timestamp}`,
+      'test-icon.png',
+      'Org for user tests',
+      testUser1Id
+    );
 
-    // Create test event
+    // Create test event using the created organization
     testEventId = await Event.addEvent(
       testEvent.title,
       'test-icon.png',
@@ -62,7 +75,7 @@ describe('User Model Tests', async () => {
       testEvent.capacity,
       testEvent.date,
       testEvent.location,
-      1  // org_id
+      testOrgId
     );
   });
 
