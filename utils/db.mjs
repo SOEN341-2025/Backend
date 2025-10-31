@@ -1,16 +1,27 @@
 
 import sqlite3 from "sqlite3"
 
+let dbInstance = null;
+let dbPath = './database.db';
+
+const init = (path = './database.db') => {
+    dbPath = path;
+    if (dbInstance) {
+        dbInstance.close();
+    }
+    dbInstance = null;
+}
 
 const getDB = () => {
-    const db = new sqlite3.Database('./database.db', (err) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        console.log('Connected to SQLite database.');
-      });
-
-    return db
+    if (!dbInstance) {
+        dbInstance = new sqlite3.Database(dbPath, (err) => {
+            if (err) {
+                return console.error(err.message);
+            }
+            console.log(`Connected to SQLite database at ${dbPath}`);
+        });
+    }
+    return dbInstance;
 }
 
 
@@ -87,4 +98,11 @@ const createDB = () => {
 
  
 
-export default { createDB, getDB }
+const close = () => {
+    if (dbInstance) {
+        dbInstance.close();
+        dbInstance = null;
+    }
+}
+
+export default { createDB, getDB, init, close }
