@@ -113,38 +113,39 @@ const addUserToOrganization = async (organization_id, user_id, role_id) => {
 
 const getOrganizationUsers = async (orgId) => {
     const database = db.getDB()
-    const memberRoleId = await new Promise((resolve, reject) => {
+    const memberRoles = await new Promise((resolve, reject) => {
         database.all(
             `SELECT * FROM organization_roles WHERE org_id=?`,
             [orgId],
-            function (err) {
+            (err, rows) => {
                 if(err) {
                     return reject(err)
                 }
-                resolve(this.lastID)
+                resolve(rows || [])
             }
         )
     })
 
-    if (memberRoleId.length == 0) return []
+    if (memberRoles.length === 0) return []
 
-    const userIds = memberRoleId.map(u => u.user_id)
-    const placeholders = memberRoleId.map(() => '?').join(',')
+    const userIds = memberRoles.map(r => r.user_id)
+    const placeholders = memberRoles.map(() => '?').join(',')
 
     const users = await new Promise((resolve, reject) => {
         database.all(
-            `SELECT * FROM users WHERE id IN (${placeholders})`,
+            `SELECT id, name, email, is_admin FROM users WHERE id IN (${placeholders})`,
             userIds,
             (err, rows) => {
                 if (err) return reject(err)
-                resolve(rows)
+                resolve(rows || [])
             }
         )
     })
 
-    const roles = await Role.getAllRoles()
-
-    return user.map(users)
+    return users.map(user => ({
+        ...user,
+        role: memberRoles.find(r => r.user_id === user.id)?.role_id
+    }))
 
 }
 

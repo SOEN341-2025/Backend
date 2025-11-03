@@ -39,3 +39,18 @@ export const verifyToken = (token) => {
         throw new Error('Invalid or expired token');
     }
 };
+
+/**
+ * Get token information message
+ * @returns {Object} Information about the token
+ */
+export const getTokenInfo = () => {
+    return {
+        message: "JWT token generated successfully",
+        details: {
+            algorithm: "HS256 (HMAC SHA256)",
+            expiry: "1 hour",
+            usage: "Include this token in the Authorization header as 'Bearer <token>' for authenticated requests"
+        }
+    };
+};
