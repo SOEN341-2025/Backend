@@ -1,3 +1,4 @@
+import organization from '../models/organization.mjs';
 import User from '../models/user.mjs'
 import { generateToken } from '../utils/jwt.mjs'
 
@@ -16,6 +17,7 @@ const login = async (req, res) => {
             name: user.name,
             email: user.email,
             admin: user.is_admin,
+            organizations: user.organizations,
             token: token
         });
     }
