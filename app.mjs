@@ -44,7 +44,7 @@ const orgs = await Organization.getAllOrganizations()
 if(orgs.length == 0) {
   const today = new Date().toISOString().split('T')[0];
   const ownerId = await User.createUser("owner_test", "owner@owner", "1234", false)
-  const orgId = await Organization.createOrganization("test", "test.png", "this is a test org", ownerId)
+  const orgId = await Organization.createOrganization("test", "test.jpg", "this is a test org", ownerId)
   await Event.addEvent("Event 1", "event1.webp", "This is event 1", "1", "100", today, "Online", orgId)
   await Event.addEvent("Event 2", "event1.webp", "This is event 2", "1", "100", today, "Online", orgId)
   await Event.addEvent("Event 3", "event1.webp", "This is event 3", "1", "100", today, "Online", orgId)
@@ -55,6 +55,13 @@ if(orgs.length == 0) {
   await Event.addEvent("Event 8", "event1.webp", "This is event 8", "1", "100", today, "Online", orgId)
   await Event.addEvent("Event 9", "event1.webp", "This is event 9", "1", "100", today, "Online", orgId)
   await Event.addEvent("Event 10", "event1.webp", "This is event 10", "1", "100", today, "Online", orgId)
+
+
+  await Organization.createOrganization("Space Concordia", "spaceConcordia.webp", "this is Space Concordia", ownerId)
+  await Organization.createOrganization("IEEE", "ieee_concordia_logo.jpeg", "this is IEEE", ownerId)
+  await Organization.createOrganization("Formula Racing", "Formula.avif", "this is Formula", ownerId)
+
+
 }
 // express setup
 ////////////////////////////////////////////////////////////////////////////
