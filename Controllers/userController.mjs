@@ -17,7 +17,6 @@ const login = async (req, res) => {
             name: user.name,
             email: user.email,
             admin: user.is_admin,
-            organizations: user.organizations,
             token: token
         });
     }
@@ -28,7 +27,19 @@ const login = async (req, res) => {
     
 }
 
-// NEW: register controller
+
+const getOrganizations = async (req, res) => {
+
+  console.log(req)
+  const user = req.user
+
+  const orgs = await User.getUserOrganizations(user.id)
+
+  res.status(200).json(orgs)
+
+}
+
+
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -49,4 +60,4 @@ const register = async (req, res) => {
 }
 
 
-export default { login, register }
+export default { login, register , getOrganizations }

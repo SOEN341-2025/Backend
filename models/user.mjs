@@ -86,7 +86,6 @@ const checkUserPassword = async (email, password) => {
         );
     })
 
-    user.organizations = await getUserOrganizations(user.id)
     return user
 }
 
@@ -113,7 +112,7 @@ const getUserOrganizations = async (userId) => {
 
   return await new Promise((resolve, reject) => {
         database.all(
-            `SELECT id, name FROM organizations WHERE id IN (${placeholders})`,
+            `SELECT id, name, icon FROM organizations WHERE id IN (${placeholders})`,
             organizationIds,
             (err, rows) => {
                 if (err) return reject(err)
@@ -142,7 +141,6 @@ const deleteUser = (id) => {
   })  
 
 }
-
 
 const addTicket = async (user_id, event_id) => {
 
