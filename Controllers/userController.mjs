@@ -27,18 +27,40 @@ const login = async (req, res) => {
     
 }
 
-
 const getOrganizations = async (req, res) => {
 
-  console.log(req)
   const user = req.user
-
   const orgs = await User.getUserOrganizations(user.id)
-
   res.status(200).json(orgs)
 
 }
 
+const getTickets = async (req, res) => {
+
+  const user = req.user
+  const tickets = await User.getUserTickets(user.id)
+
+  res.status(200).json(tickets)
+}
+
+const buyTicket = async (req, res) => {
+
+  const user = req.user
+  const { eventId } = req.body;
+
+  try{
+    await User.addTicket(user.id, eventId )
+
+    return res.status(200).json({ message : "ticket was bought" })
+  }
+  catch (err) {
+    //Todo
+    console.log(err)
+  }
+
+  res.status(500).json({ error: 'Server error' });
+
+}
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -60,4 +82,4 @@ const register = async (req, res) => {
 }
 
 
-export default { login, register , getOrganizations }
+export default { login, register, getOrganizations, getTickets, buyTicket }
