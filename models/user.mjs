@@ -89,39 +89,6 @@ const checkUserPassword = async (email, password) => {
     return user
 }
 
-const getUserOrganizations = async (userId) => {
-
-
-  const database = db.getDB()
-  const organizationRows = await new Promise((resolve, reject) => {
-    database.all(
-      `SELECT org_id FROM organization_roles WHERE user_id = ?`,
-      [userId],
-      (err, rows) => {
-        if (err) return reject(err)
-        resolve(rows || [])
-      }
-    )
-  })
-
-  if (organizationRows.length === 0) return [];
-
-  const organizationIds = organizationRows.map(r => r.org_id);
-  const placeholders = organizationIds.map(() => '?').join(',');
-
-
-  return await new Promise((resolve, reject) => {
-        database.all(
-            `SELECT id, name, icon FROM organizations WHERE id IN (${placeholders})`,
-            organizationIds,
-            (err, rows) => {
-                if (err) return reject(err)
-                resolve(rows || [])
-            }
-        )
-  })
-}
-
 const deleteUser = (id) => {
 
   const database = db.getDB()
@@ -202,4 +169,4 @@ const getUserTickets = async (id) => {
 };
 
 
-export default { createUser, getUser, getUserOrganizations, checkUserPassword, getAllUsers, deleteUser, getUserTickets, addTicket}
+export default { createUser, getUser, checkUserPassword, getAllUsers, deleteUser, getUserTickets, addTicket}

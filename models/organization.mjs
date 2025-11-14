@@ -149,4 +149,37 @@ const getOrganizationUsers = async (orgId) => {
 
 }
 
-export default {createOrganization, getOrganizationEvents, addUserToOrganization, getOrganization, getAllOrganizations, getOrganizationUsers}
+const getUserOrganizations = async (userId) => {
+
+
+  const database = db.getDB()
+  const organizationRows = await new Promise((resolve, reject) => {
+    database.all(
+      `SELECT org_id FROM organization_roles WHERE user_id = ?`,
+      [userId],
+      (err, rows) => {
+        if (err) return reject(err)
+        resolve(rows || [])
+      }
+    )
+  })
+
+  if (organizationRows.length === 0) return [];
+
+  const organizationIds = organizationRows.map(r => r.org_id);
+  const placeholders = organizationIds.map(() => '?').join(',');
+
+
+  return await new Promise((resolve, reject) => {
+        database.all(
+            `SELECT id, name, icon FROM organizations WHERE id IN (${placeholders})`,
+            organizationIds,
+            (err, rows) => {
+                if (err) return reject(err)
+                resolve(rows || [])
+            }
+        )
+  })
+}
+
+export default {createOrganization, getUserOrganizations, getOrganizationEvents, addUserToOrganization, getOrganization, getAllOrganizations, getOrganizationUsers}
