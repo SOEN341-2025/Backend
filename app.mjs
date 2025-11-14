@@ -10,8 +10,9 @@ import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 import userRoutes from "./routes/userRoutes.mjs"
+import ticketRoutes from "./routes/ticketRoutes.mjs"
+import organizationRoutes from "./routes/organizationRoutes.mjs";
 import eventRoutes from "./routes/eventRoutes.mjs"
-import protectedRoutes from "./routes/protectedRoutes.mjs"
 
 // Globals
 ////////////////////////////////////////////////////////////////////////////
@@ -63,6 +64,9 @@ if(orgs.length == 0) {
 
 
 }
+
+
+
 // express setup
 ////////////////////////////////////////////////////////////////////////////
 const app = express()
@@ -71,8 +75,9 @@ const app = express()
 app.use(cors())
 app.use(bodyparser.json())
 app.use("/api/user", userRoutes)
+app.use("/api/organization", organizationRoutes)
+app.use("/api/ticket", ticketRoutes)
 app.use("/api/event", eventRoutes)
-app.use("/api", protectedRoutes) // Todo 
 
 
 app.listen(express_port,'0.0.0.0', () => {
