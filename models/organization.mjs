@@ -147,6 +147,25 @@ const getOrganizationUsers = async (orgId) => {
         role: memberRoles.find(r => r.user_id === user.id)?.role_id
     }))
 
+    const allRoles = await Role.getAllRoles()
+
+    const roleMap = Object.fromEntries(
+        allRoles.map(m => [m.id, m])
+    )
+
+    const mergedUsersRole = mergedUsersRoleId.map(u => {
+
+        const newUserObj = {
+            ...u,
+            role: roleMap[u.role_id].name
+        }
+
+        delete newUserObj.role_id
+
+        return newUserObj
+    })
+
+    return mergedUsersRole
 }
 
 const getUserOrganizations = async (userId) => {

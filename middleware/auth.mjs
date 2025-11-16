@@ -29,7 +29,7 @@ export const authenticateToken = (req, res, next) => {
     }
 };
 
-export const requireOwner = () => {
+export const requireOwner = (req, res, next) => {
 
     return (req, res, next) => {
         if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
@@ -37,7 +37,7 @@ export const requireOwner = () => {
 
 }
 
-export const requireAdmin = () => {
+export const requireAdmin = (req, res, next) => {
 
     return (req, res, next) => {
         if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
@@ -46,27 +46,3 @@ export const requireAdmin = () => {
     }
 
 }
-
-
-/**
- * Middleware to optionally authenticate JWT tokens (doesn't fail if no token)
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next function
- */
-export const optionalAuth = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token) {
-        try {
-            const decoded = verifyToken(token);
-            req.user = decoded;
-        } catch (error) {
-            // Token is invalid, but we continue without authentication
-            req.user = null;
-        }
-    }
-
-    next();
-};

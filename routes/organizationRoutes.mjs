@@ -5,7 +5,7 @@ import { authenticateToken } from '../middleware/auth.mjs';
 
 const router = Router()
 router.get("/", OrganizationController.getOrganization)
-router.post("/analytics", OrganizationController.getOrgnaizationAnalytics)
+router.get("/member/:id", authenticateToken, OrganizationController.getOrgnaizationAnalytics)
 router.get("/user", authenticateToken , OrganizationController.getUserOrganizations)
 
 
