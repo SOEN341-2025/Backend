@@ -117,11 +117,9 @@ const getOrganizationUsers = async (orgId) => {
         database.all(
             `SELECT * FROM organization_roles WHERE org_id=?`,
             [orgId],
-            function (err) {
-                if(err) {
-                    return reject(err)
-                }
-                resolve(this.lastID)
+            (err, rows) => {
+                if (err) return reject(err)
+                resolve(rows)
             }
         )
     })
@@ -129,11 +127,12 @@ const getOrganizationUsers = async (orgId) => {
     if (memberRoleId.length == 0) return []
 
     const userIds = memberRoleId.map(u => u.user_id)
-    const placeholders = memberRoleId.map(() => '?').join(',')
+    const user_id_placeholders = memberRoleId.map(() => '?').join(',')
+
 
     const users = await new Promise((resolve, reject) => {
         database.all(
-            `SELECT * FROM users WHERE id IN (${placeholders})`,
+            `SELECT id,name FROM users WHERE id IN (${user_id_placeholders})`,
             userIds,
             (err, rows) => {
                 if (err) return reject(err)
@@ -142,10 +141,35 @@ const getOrganizationUsers = async (orgId) => {
         )
     })
 
-    const roles = await Role.getAllRoles()
+    const roleIdMap = Object.fromEntries(
+        memberRoleId.map(m => [m.user_id, m.role_id])
+    )
 
-    return user.map(users)
+    const mergedUsersRoleId = users.map(u => ({
+        ...u,
+        role_id: roleIdMap[u.id]
+    }))
 
+
+    const allRoles = await Role.getAllRoles()
+
+    const roleMap = Object.fromEntries(
+        allRoles.map(m => [m.id, m])
+    )
+
+    const mergedUsersRole = mergedUsersRoleId.map(u => {
+
+        const newUserObj = {
+            ...u,
+            role: roleMap[u.role_id].name
+        }
+
+        delete newUserObj.role_id
+
+        return newUserObj
+    })
+
+    return mergedUsersRole
 }
 
 const getUserOrganizations = async (userId) => {
