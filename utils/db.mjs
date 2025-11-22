@@ -74,8 +74,18 @@ const createDB = () => {
           price REAL,
           capacity INTEGER,
           date TEXT,
+          created_date TEXT,
           location TEXT,
           FOREIGN KEY (org_id) REFERENCES organizations(id)
+        )`
+      )
+      .run(
+        `CREATE TABLE IF NOT EXISTS saved_events (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER,
+          event_id INTEGER,
+          FOREIGN KEY (user_id) REFERENCES users(id),
+          FOREIGN KEY (event_id) REFERENCES events(id)
         )`
       )
       .run(
@@ -83,6 +93,7 @@ const createDB = () => {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           user_id INTEGER,
           event_id INTEGER,
+          bought_time TEXT,
           status INTEGER,
           FOREIGN KEY (user_id) REFERENCES users(id),
           FOREIGN KEY (event_id) REFERENCES events(id)

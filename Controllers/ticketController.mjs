@@ -11,10 +11,11 @@ const getTickets = async (req, res) => {
 const buyTicket = async (req, res) => {
 
   const user = req.user
+  const today = new Date().toISOString().split('T')[0];
   const { eventId } = req.body;
 
   try{
-    await User.addTicket(user.id, eventId )
+    await User.addTicket(user.id, eventId, today)
 
     return res.status(200).json({ message : "ticket was bought" })
   }
