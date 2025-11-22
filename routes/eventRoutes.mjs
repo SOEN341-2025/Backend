@@ -5,8 +5,12 @@ import eventsController from "../Controllers/eventController.mjs"
 const router = Router()
 
 router.get("/", eventsController.getAllEvents)
-router.get("/events/:id", eventsController.getEventById)
-router.delete("/events/:id", authenticateToken , eventsController.deleteEventById)  
-router.post("/events", authenticateToken , eventsController.addEvent)
+router.post("/", authenticateToken , eventsController.addEvent)
+
+router.get("/:id", eventsController.getEventById)
+
+router.get("/analytics/:id", authenticateToken, eventsController.getEventAnalytics)
+
+router.delete("/:id", authenticateToken , eventsController.deleteEventById)  
 
 export default router

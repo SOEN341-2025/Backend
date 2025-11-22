@@ -109,7 +109,7 @@ const deleteUser = (id) => {
 
 }
 
-const addTicket = async (user_id, event_id) => {
+const addTicket = async (user_id, event_id, today) => {
 
   const database = db.getDB()
 
@@ -122,16 +122,14 @@ const addTicket = async (user_id, event_id) => {
   return await new Promise((resolve, reject) => {
 
     database.run(
-      `INSERT INTO tickets (user_id, event_id, status) VALUES (?, ?, ?)`,
-      [user_id, event_id, 1],
+      `INSERT INTO tickets (user_id, event_id, bought_time, status) VALUES (?, ?, ?, ?)`,
+      [user_id, event_id, today, 1],
 
       function (err) {
         if (err) return reject(err)            
           resolve(this.lastID)
         }
-
     );
-
   })
 }
 
