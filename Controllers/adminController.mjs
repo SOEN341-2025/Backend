@@ -22,14 +22,6 @@ const deleteUser = async (req, res) => {
 }
 
 
-const updateUser = async (req, res) => {
-
-    const id = req.body.id
-    const user = await User.getUser(id)
-
-
-}
-
 const deleteOrganization = (req, res) => {
 
 }
@@ -43,5 +35,10 @@ const deleteEvent = (req, res) => {
 
 }
 
+const getAdminData = async (req, res) => {
+    const users = await User.getAllUsers()
+    const organizations = await Organization.getAllOrganizations()
+    res.status(200).json({organizations :  organizations, users: users, requests: []})
+}
 
-export default {deleteEvent, verifyOrganization, deleteOrganization, deleteUser, updateUser}
+export default {deleteEvent, verifyOrganization, deleteOrganization, deleteUser, getAdminData}

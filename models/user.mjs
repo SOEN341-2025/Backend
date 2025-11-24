@@ -167,4 +167,58 @@ const getUserTickets = async (id) => {
 };
 
 
-export default { createUser, getUser, checkUserPassword, getAllUsers, deleteUser, getUserTickets, addTicket}
+const addWishListedEvents = async (user_id, event_id) => {
+  const database = db.getDB()
+
+  const user = await getUser(user_id)
+  if(!user) throw new Error(`User ${user_id} not found`);
+
+  const event = await Event.getEventById(event_id)
+  if(!event) throw new Error(`Event ${event_id} not found`)
+
+  return new Promise((resolve, reject) => {
+    database.run(
+      `INSERT INTO saved_events (user_id, event_id, status) VALUES (?, ?, ?, ?)`,
+      [user_id, event_id, today, 1],
+
+      function (err) {
+        if (err) return reject(err)            
+          resolve(this.lastID)
+        }
+    );
+  })
+}
+
+const getWishListedEvents = async (user_id) => {
+  const database = db.getDB()
+
+  const rows = await new Promise((resolve, reject) => {
+    database.all(
+      `SELECT event_id FROM saved_events WHERE user_id = ?`,
+      [id],
+      (err, rows) => {
+        if (err) return reject(err);
+        if (!rows || rows.length === 0) return resolve([]); // no tickets
+        resolve(rows);
+      }
+    );
+  });
+
+  const eventIds = rows.map(r => r.event_id);
+  if (eventIds.length === 0) return [];
+
+  const placeholders = eventIds.map(() => '?').join(',');
+
+  return await new Promise((resolve, reject) => {
+    database.all(
+      `SELECT * FROM events WHERE id IN (${placeholders})`,
+      eventIds,
+      (err, events) => {
+        if (err) return reject(err);
+        resolve(events);
+      }
+    );
+  })
+}
+
+export default { createUser, getUser, checkUserPassword, getAllUsers, deleteUser, getUserTickets, addTicket , addWishListedEvents, getWishListedEvents}

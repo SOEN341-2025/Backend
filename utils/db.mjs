@@ -89,6 +89,16 @@ const createDB = () => {
         )`
       )
       .run(
+        `CREATE TABLE IF NOT EXISTS organization_create_requests(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT UNIQUE,
+          icon TEXT,
+          description TEXT,
+          creator_id  INTEGER,
+          FOREIGN KEY (creator_id) REFERENCES users(id)
+        )`
+      )
+      .run(
         `CREATE TABLE IF NOT EXISTS tickets (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           user_id INTEGER,
