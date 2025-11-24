@@ -178,8 +178,8 @@ const addWishListedEvents = async (user_id, event_id) => {
 
   return new Promise((resolve, reject) => {
     database.run(
-      `INSERT INTO saved_events (user_id, event_id, status) VALUES (?, ?, ?, ?)`,
-      [user_id, event_id, today, 1],
+      `INSERT INTO saved_events (user_id, event_id) VALUES (?, ?)`,
+      [user_id, event_id],
 
       function (err) {
         if (err) return reject(err)            
@@ -189,7 +189,7 @@ const addWishListedEvents = async (user_id, event_id) => {
   })
 }
 
-const getWishListedEvents = async (user_id) => {
+const getWishListedEvents = async (id) => {
   const database = db.getDB()
 
   const rows = await new Promise((resolve, reject) => {
@@ -203,6 +203,8 @@ const getWishListedEvents = async (user_id) => {
       }
     );
   });
+
+  console.log("meow")
 
   const eventIds = rows.map(r => r.event_id);
   if (eventIds.length === 0) return [];

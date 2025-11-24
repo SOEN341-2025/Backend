@@ -59,9 +59,8 @@ const addWishList = async (req, res) => {
 const getWishList = async (req, res) => {
 
   const user = req.user
-  const id = req.body.id
 
-  const wishLists = await User.getWishListedEvents(user.id, id)
+  const wishLists = await User.getWishListedEvents(user.id)
 
   res.status(200).json( wishLists )
 
