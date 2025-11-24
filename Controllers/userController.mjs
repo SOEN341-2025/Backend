@@ -46,5 +46,25 @@ const register = async (req, res) => {
   }
 }
 
+const addWishList = async (req, res) => {
+  const user = req.user
+  const id = req.body.id
 
-export default { login, register }
+  await User.addWishListedEvents(user.id, id)
+
+
+  res.status(200).json( {message : "event was wish listed"} )
+}
+
+const getWishList = async (req, res) => {
+
+  const user = req.user
+  const id = req.body.id
+
+  const wishLists = await User.getWishListedEvents(user.id, id)
+
+  res.status(200).json( wishLists )
+
+}
+
+export default { login, register , addWishList , getWishList }
