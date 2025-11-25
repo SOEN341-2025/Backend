@@ -1,4 +1,5 @@
 import { verifyToken } from '../utils/jwt.mjs';
+import User from "../models/user.mjs"
 
 /**
  * Middleware to authenticate JWT tokens
@@ -37,12 +38,15 @@ export const requireOwner = (req, res, next) => {
 
 }
 
-export const requireAdmin = (req, res, next) => {
+export const requireAdmin = async (req, res, next) => {
 
-    return (req, res, next) => {
-        if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
-        if(!req.user.is_admin) return res.status(403).json({message: "Forbidden"});
-        next()
-    }
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+
+    const user = await User.getUser(req.user.id)
+
+    console.log(user)
+
+    if(user.is_admin != 1) return res.status(403).json({message: "Forbidden"});
+    next()
 
 }
