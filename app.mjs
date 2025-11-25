@@ -6,10 +6,12 @@ import fillDB from "./utils/fillDb.mjs"
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
+
 import userRoutes from "./routes/userRoutes.mjs"
 import ticketRoutes from "./routes/ticketRoutes.mjs"
 import organizationRoutes from "./routes/organizationRoutes.mjs";
 import eventRoutes from "./routes/eventRoutes.mjs"
+import adminRoutes from "./routes/adminRoutes.mjs"
 
 // Globals
 ////////////////////////////////////////////////////////////////////////////
@@ -32,6 +34,7 @@ app.use("/api/user", userRoutes)
 app.use("/api/organization", organizationRoutes)
 app.use("/api/ticket", ticketRoutes)
 app.use("/api/event", eventRoutes)
+app.use("/api/test", adminRoutes)
 
 
 app.listen(express_port,'0.0.0.0', () => {

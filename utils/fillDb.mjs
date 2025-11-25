@@ -12,7 +12,7 @@ const fillDB = async () => {
     const users = await User.getAllUsers()
 
     if (users.length == 0)  {
-        await User.createUser("admin", "admin@admin", "1234", true)
+        await User.createUser("admin", "admin@admin.com", "1234", true)
     }
 
     // add Roles to table if it is empty

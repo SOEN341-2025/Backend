@@ -5,3 +5,5 @@ import adminController from "../Controllers/adminController.mjs";
 const router = Router()
 
 router.get("/", authenticateToken , requireAdmin, adminController.getAdminData)
+
+export default router
